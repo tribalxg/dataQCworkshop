@@ -1,0 +1,9 @@
+grp_type,start_date,end_date,WQS
+core_sal,01/01,12/31,16
+core_sal_supp1,01/01,07/01,13
+core_sal_supp1,07/02,08/31,16
+core_sal_supp1,09/01,12/31,13
+core_sal_supp2,01/01,02/14,16
+core_sal_supp2,02/15,07/01,13
+core_sal_supp2,07/02,12/31,16
+char,01/01,12/31,12

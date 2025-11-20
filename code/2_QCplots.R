@@ -8,18 +8,18 @@ library(lubridate)
 
 
 # base folder
-base_loc <- "D:\\Hoh tribe Bray Water Quality\\Water quality monitoring program\\Continuous temperature\\Data\\2022\\2022 summer_NEW\\"
+base_loc <- "data/2022_summer/"
 
 # directory containing cropped data to be plotted
-cropped_loc <- paste0(base_loc, "2. Cropped files\\2. Cropped csv\\")
+cropped_loc <- paste0(base_loc, "2_cropped_csv/")
 # directory where QC plots will be stored
-qc_plots_loc <- paste0(base_loc, "3. QC plots\\")
+qc_plots_loc <- paste0(base_loc, "4_qc_plots/")
 
 # -------------------------------------------
 # editing mostly takes place above this line
 # -------------------------------------------
 
-# get a list of all the cropped files 
+# get a list of all the cropped files
 filenames <- list.files(path = cropped_loc, pattern=".csv")
 # this is now a list of all filenames; we haven't read in the data yet, but
 # make sure this lists all the cropped files you want to plot
@@ -45,7 +45,7 @@ for (selection in filenames) {
     stop("filename does not say sum or fall.")
   }
   deploy_year = 2000 + as.integer(info_from_filename[4]) # or we can format as character
-  
+
   oneread <- read.csv(
     file = paste0(cropped_loc, selection), as.is=T, skip=1, fill=T, header=F
   ) %>% ## Reads the selected datafile.
@@ -56,7 +56,7 @@ for (selection in filenames) {
                   deploy_season = deploy_season,
                   deploy_year = deploy_year)
   Combined <- dplyr::bind_rows(Combined, oneread)  ## Adds the datafile's data to the existing combined datafile.
-  
+
 } # filenames loop
 cat("Done reading in cropped data.", fill = TRUE)
 
@@ -121,10 +121,10 @@ for(s in sites){
                   color = "Media") +
     ggplot2::scale_color_manual(values = range.colors) +
     ggplot2::geom_hline(yintercept = 3, linewidth = 0.3, color = "red")
-  
+
   ggplot2::ggsave(paste0(qc_plots_loc, s, "_AirWaterTempRange.png"), rangeplot,
                   width = 11, height = 8.5, units = "in")
-  
+
   maxdiffplot <- ggplot2::ggplot(this.site.combined %>%
                                    dplyr::filter(calc %in% c("dailymax_air", "dailymax_water", "AWMaxDiff")),
                                  ggplot2::aes(x = date, y = value, color = calc)) +
@@ -134,13 +134,13 @@ for(s in sites){
                   color = "Media") +
     ggplot2::scale_color_manual(values = maxdiff.colors) +
     ggplot2::geom_hline(yintercept = 20, linewidth = 0.3, color = "red")
-  
+
   ggplot2::ggsave(paste0(qc_plots_loc, s, "_MaxDiffAirWaterTemp.png"),
                   maxdiffplot, width = 11, height = 8.5, units = "in")
-  
+
   maxdifplotly <- plotly::ggplotly(maxdiffplot)#to create plotly of maxdifplot to trace plot
   rangeplotly <- plotly::ggplotly(rangeplot)#to create plotly of rangeplot to trace plot
-  
+
   htmlwidgets::saveWidget(maxdifplotly, paste0(qc_plots_loc, s, "_MaxDiffAirWaterTemp.html"))
   htmlwidgets::saveWidget(rangeplotly, paste0(qc_plots_loc, s, "_AirWaterTempRange.html"))
 }; cat("Done.", fill = TRUE)

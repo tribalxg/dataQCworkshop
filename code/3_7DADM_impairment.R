@@ -2,27 +2,12 @@
 library(readr)
 library(dplyr)
 library(lubridate)
-
-# #base folder, the rest of the folders are derived from this base folder
-# base_loc <-"D:\\Hoh tribe Bray Water Quality\\Water quality monitoring program\\Continuous temperature\\Data\\"
-# 
-# # to handle data from a new water year, just change these file paths
-# fall_data_loc = paste0(base_loc, "2023\\2023 fall\\4. Finalized data\\")
-# sum_data_loc = paste0(base_loc, "2024\\2024 summer\\4. Finalized Data\\")
-# lookup_loc = paste0(base_loc, "lookup_tables\\")
-
-# # Jess filepaths for 2022-2023 data from Kim (time zone worked)
-# base_loc = "~/Documents/TribalConsulting/HohTribe/Bray Hoh data 3.29.24/"
-# fall_data_loc <- paste0(base_loc, "2022/2022 fall/")
-# sum_data_loc <- paste0(base_loc, "2023/2023 summer/")
-# plots_loc <- paste0(base_loc, "plots/")
-# lookup_loc = base_loc
+# you also need the runner package (but you don't need to load it)
 
 # Jess filepaths for 2023-2024 data from Kim (need to update handling of time zone)
-base_loc = "/Users/jessicakunke/Documents/TribalConsulting/HohTribe/HohTribe_code_June2025/"
-fall_data_loc <- paste0(base_loc, "2023_fall_data/")
-sum_data_loc <- paste0(base_loc, "2024_summer_data/")
-plots_loc <- paste0(base_loc, "plots/")
+base_loc = "data/"
+fall_data_loc <- paste0(base_loc, "2023_fall_data_qcd/")
+sum_data_loc <- paste0(base_loc, "2024_summer_data_qcd/")
 lookup_loc = base_loc
 
 # read in site-group lookup table
@@ -64,12 +49,12 @@ for(this_file in data_files){ # for each file,
   file_no = file_no + 1
   # this_file = data_files[1] # uncomment to troubleshoot within loop
   # this_file = "EFKalaloch_2023_fall_FINAL.csv"
-  
+
   # extract metadata (sitename and deployment season) from filename
   filename_parts = strsplit(this_file, '[_.]')[[1]]
   sitename = filename_parts[1]
   deploy_season = paste(filename_parts[3], filename_parts[2])
-  
+
   # all the fall files are first in the list, so we can use this to tell
   # from file_no whether the current file is a summer or fall deployment
   # and that tells us in which directory we can find this file
@@ -78,7 +63,7 @@ for(this_file in data_files){ # for each file,
   }else{
     file_dir = fall_data_loc
   }
-  
+
   # read in the data (this_file) from the right directory (file_dir)
   this_data = readr::read_csv(file = paste0(file_dir, this_file),
                               skip = 1, # skip header line
@@ -104,7 +89,7 @@ for(this_file in data_files){ # for each file,
       DeploySeason = deploy_season) %>%
     # keep only the data with UseForCalc = 1 (data that passed QC)
     dplyr::filter(UseForCalc == 1)
-  
+
   # add this file's data to the combined data frame
   all_data <- dplyr::bind_rows(all_data, this_data)
   # print some basic info to the R Console to update us on what was read in

@@ -11,7 +11,7 @@ library(tidyr)
 library(ggplot2)
 
 # base folder
-base_loc <- "2023_fall_data/"
+base_loc <- "data/2022_summer/"
 
 # input folder; directory containing your raw data
 rawdata_loc <- paste0(base_loc, "1_raw_csv/")
@@ -24,7 +24,7 @@ croppedplots_loc <- paste0(base_loc, "3_cropped_plots/")
 
 # name of your LDRTimes file that has the lookup table with deployment/retrieval dates
 # note: the line below assumes ldrtimes_fn is in rawdata_loc folder
-ldrtimes_fn <- "ldrtimes.xlsx"
+ldrtimes_fn <- "ldrtimes_2022.xlsx"
 
 # -------------------------------------------
 # editing mostly takes place above this line
